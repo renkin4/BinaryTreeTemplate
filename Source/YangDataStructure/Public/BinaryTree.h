@@ -4,8 +4,12 @@
  * 
  */
 
-/** This template represent a element type that tie to a Number for Easy Search using Binary Tree Data Structure*/
-template <typename ElementType>
+/** 
+ * This template represent a element type that tie to a Number for Easy Search using Binary Tree Data Structure
+ * @ Element type is the type of class u wish to tie it to
+ * @ Value form please enter. Integer or Float value as ValueForm
+ */
+template <typename ElementType, typename ValueForm>
 class TBinaryTree
 {
 public:
@@ -35,13 +39,13 @@ public:
 
 		TBinaryTreeNode * GetRightNode() const { return RightNode; }
 
-		int32 GetValue() const { return Value; }
+		ValueForm GetValue() const { return Value; }
 
 	protected:
 		ElementType			ELement;
 		TBinaryTreeNode *	LeftNode;
 		TBinaryTreeNode *	RightNode;
-		int32				Value;
+		ValueForm			Value;
 
 		//TODO depth of this node
 
@@ -54,7 +58,7 @@ public:
 		:RootNode(nullptr)
 	{}
 
-	TBinaryTree(ElementType & Elem, int32 Val) 
+	TBinaryTree(ElementType & Elem, ValueForm Val)
 	{
 		InsertNode(Elem, Val);
 	}
@@ -64,7 +68,7 @@ public:
 		DestroyTree();
 	}
 	
-	void InsertNode(ElementType & Elem, int32 Val) 
+	void InsertNode(ElementType & Elem, ValueForm Val)
 	{
 		if (RootNode != nullptr) 
 		{
@@ -78,7 +82,7 @@ public:
 	}
 
 	/** Search For The node that is tie to the val */
-	TBinaryTreeNode * SearchNode(int32 Val)
+	TBinaryTreeNode * SearchNode(ValueForm Val)
 	{
 		// Search From Root Node
 		return SearchNode(Val, RootNode);
@@ -98,6 +102,12 @@ public:
 
 	TBinaryTreeNode * GetRootNode() const { return RootNode; }
 
+	/** Static assert only allow float, int32 or uint32 as a ValueForm */
+	static_assert(TAreTypesEqual<ValueForm, int32>::Value
+		|| TAreTypesEqual<ValueForm, float>::Value
+		|| TAreTypesEqual<ValueForm, uint32>::Value, 
+		"TBinaryTree::ValueFrom expect Float, int32 or uint32 to be passed in.");
+
 private:
 	/** Will destroy anything that's below it as well */
 	void DestroyTree(TBinaryTreeNode * Leaf) 
@@ -112,7 +122,7 @@ private:
 	}
 
 	/** Try insert Node according to the Current Node */
-	void InsertNode(ElementType & Elem, int32 Val, TBinaryTreeNode * Leaf)
+	void InsertNode(ElementType & Elem, ValueForm Val, TBinaryTreeNode * Leaf)
 	{
 		// If Val is lesser then The Current Node Val go left
 		if (Val < Leaf->Value)
@@ -146,7 +156,7 @@ private:
 		}
 	}
 
-	TBinaryTreeNode * SearchNode(int32 Val, TBinaryTreeNode* Leaf) 
+	TBinaryTreeNode * SearchNode(ValueForm Val, TBinaryTreeNode* Leaf)
 	{
 		if (Leaf != nullptr) 
 		{
