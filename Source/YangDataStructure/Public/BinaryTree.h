@@ -5,7 +5,7 @@
  */
 
 /** This template represent a element type that tie to a Number for Easy Search using Binary Tree Data Structure*/
-template <typename ElementType, int32 Number>
+template <typename ElementType>
 class TBinaryTree
 {
 public:
@@ -13,9 +13,6 @@ public:
 	{
 	public:
 		friend class TBinaryTree;
-
-		/** Must assign some value on construct */
-		TBinaryTreeNode() = delete;
 
 		/** Default Constructor*/
 		TBinaryTreeNode(const ElementType & InElement, int32 InValue)
@@ -29,7 +26,7 @@ public:
 		const ElementType & GetElement() const { return ELement; }
 
 		/** Get default Value*/
-		ElementType & GetElement() const { return ELement; }
+		ElementType & GetElement() { return ELement; }
 
 		TBinaryTreeNode * GetLeftNode() const { return LeftNode; }
 
@@ -53,6 +50,11 @@ public:
 	TBinaryTree() 
 		:RootNode(nullptr)
 	{}
+
+	TBinaryTree(ElementType & Elem, int32 Val) 
+	{
+		InsertNode(Elem, Val);
+	}
 
 	~TBinaryTree() 
 	{
