@@ -55,7 +55,9 @@ public:
 	{}
 
 	~TBinaryTree() 
-	{}
+	{
+		DestroyTree();
+	}
 	
 	void InsertNode(ElementType & Elem, int32 Val) 
 	{
@@ -73,10 +75,11 @@ public:
 	/** Search For The node that is tie to the val */
 	TBinaryTreeNode * SearchNode(int32 Val)
 	{
-		return nullptr;
+		// Search From Root Node
+		return SearchNode(Val, RootNode);
 	}
 
-	/** Searching Using Element Breaks the purpose of Binary Tree. */
+	/** Searching Using Element Breaks the purpose of Binary Tree. PS Not usable yet*/
 	TBinaryTreeNode * SearchNode(ElementType & Elem)
 	{
 		return nullptr;
@@ -103,6 +106,7 @@ private:
 		}
 	}
 
+	/** Try insert Node according to the Current Node */
 	void InsertNode(ElementType & Elem, int32 Val, TBinaryTreeNode * Leaf)
 	{
 		// If Val is lesser then The Current Node Val go left
@@ -135,6 +139,26 @@ private:
 				Leaf->RightNode = new TBinaryTreeNode(Elem, Val);
 			}
 		}
+	}
+
+	TBinaryTreeNode * SearchNode(int32 Val, TBinaryTreeNode* Leaf) 
+	{
+		if (Leaf != nullptr) 
+		{
+			// Check Current Leaf 
+			if (Val == Leaf->Value) 
+			{
+				return Leaf;
+			}
+
+			// if not Current Leaf check should search from right or left
+			if (Val < Leaf->Value)
+				return SearchNode(Val, Leaf->LeftNode);
+			else
+				return SearchNode(Val, Leaf->RightNode);
+		}
+
+		return nullptr;
 	}
 
 	TBinaryTreeNode * RootNode;
