@@ -14,6 +14,9 @@ public:
 	public:
 		friend class TBinaryTree;
 
+		/** Delete Default Constructor and set default to Next Constructor Declaration */
+		TBinaryTreeNode() = delete;
+
 		/** Default Constructor*/
 		TBinaryTreeNode(const ElementType & InElement, int32 InValue)
 			: ELement(InElement), LeftNode(nullptr), RightNode(nullptr), Value(InValue)
