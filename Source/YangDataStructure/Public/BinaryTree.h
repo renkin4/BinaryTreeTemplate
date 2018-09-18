@@ -17,9 +17,12 @@ public:
 	{
 	public:
 		friend class TBinaryTree;
-
+	
 		/** Delete Default Constructor and set default to Next Constructor Declaration */
 		TBinaryTreeNode() = delete;
+
+		/** Delete Copy constructor */
+		TBinaryTreeNode(const TBinaryTreeNode & BinaryTreeNode) = delete;
 
 		/** Default Constructor*/
 		TBinaryTreeNode(const ElementType & InElement, int32 InValue)
@@ -107,6 +110,8 @@ public:
 
 	// TODO tree sort. Sort An Array that's everywhere and return the val back in Array form
 
+	// TODO Balance the Tree
+
 	/** Convert Sorted TMap to Binary Trees*/
 	TBinaryTreeNode * SortedArrayToBT(TMap<ValueForm, ElementType> MappedArray, int32 Start, int32 End)
 	{
@@ -130,11 +135,13 @@ public:
 		return CurrentNode;
 	}
 
+	/** find the minimum Val from Root Node */
 	TBinaryTreeNode * GetMinValNode() 
 	{
 		return GetMinValNode(RootNode);
 	}
 
+	/** find the Maximum Val from Root Node */
 	TBinaryTreeNode * GetMaxValNode() 
 	{
 		return GetMaxValNode(RootNode);
@@ -227,11 +234,11 @@ private:
 		TBinaryTreeNode * MinimumNode = NodeToSearchFrom;
 
 		// Keep Going left until u can't go left anymore
-		while (NodeToSearchFrom->LeftNode != nullptr)
+		while (MinimumNode->LeftNode != nullptr)
 		{
-			MinimumNode = NodeToSearchFrom->LeftNode;
+			MinimumNode = MinimumNode->LeftNode;
 		}
-	
+
 		return MinimumNode;
 	}
 
@@ -241,11 +248,11 @@ private:
 		TBinaryTreeNode * MaximumNode = NodeToSearchFrom;
 
 		// Keep Going left until u can't go Right anymore
-		while (NodeToSearchFrom->RightNode != nullptr)
+		while (MaximumNode->RightNode != nullptr)
 		{
-			MaximumNode = NodeToSearchFrom->RightNode;
+			MaximumNode = MaximumNode->RightNode;
 		}
-	
+
 		return MaximumNode;
 	}
 
