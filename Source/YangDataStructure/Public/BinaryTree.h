@@ -52,6 +52,7 @@ public:
 		//TODO node operator == and !=
 
 		//TODO node depth Operator
+
 	};
 
 	TBinaryTree() 
@@ -68,17 +69,17 @@ public:
 		DestroyTree();
 	}
 	
-	void InsertNode(ElementType & Elem, ValueForm Val)
+	TBinaryTreeNode* InsertNode(ElementType & Elem, ValueForm Val)
 	{
 		if (RootNode != nullptr) 
 		{
 			// Insert new Node From RootNode. It will search for a suitable spot for New guy
-			InsertNode(Elem, Val, RootNode);
-			return;
+			return InsertNode(Elem, Val, RootNode);;
 		}
 
 		// if RootNode doesn't Exist create 1
 		RootNode = new TBinaryTreeNode(Elem, Val);
+		return RootNode;
 	}
 
 	/** Search For The node that is tie to the val */
@@ -100,6 +101,45 @@ public:
 		DestroyTree(RootNode);
 	}
 
+	// TODO sort the binary tree
+
+	// TOOD remove 1 of the Branch in the Tree
+
+	// TODO tree sort. Sort An Array that's everywhere and return the val back in Array form
+
+	/** Convert Sorted TMap to Binary Trees*/
+	TBinaryTreeNode * SortedArrayToBT(TMap<ValueForm, ElementType> MappedArray, int32 Start, int32 End)
+	{
+		// When It overlapped the mid points
+		if (Start > End)
+			return nullptr;
+
+		int32 MidVal = (Start + End) / 2;
+		ElementType & ElemType = *MappedArray.Find(MidVal);
+		ValueForm InsertVal = *MappedArray.FindKey(ElemType);
+
+		// The Current Node it's Pointing Towards
+		TBinaryTreeNode * CurrentNode = InsertNode(ElemType, InsertVal);
+
+		// Add Left node Recursively
+		SortedArrayToBT(MappedArray, Start, MidVal - 1);
+
+		// Add Right Node Recursively
+		SortedArrayToBT(MappedArray, MidVal + 1, End);
+
+		return CurrentNode;
+	}
+
+	TBinaryTreeNode * GetMinValNode() 
+	{
+		return GetMinValNode(RootNode);
+	}
+
+	TBinaryTreeNode * GetMaxValNode() 
+	{
+		return GetMaxValNode(RootNode);
+	}
+
 	TBinaryTreeNode * GetRootNode() const { return RootNode; }
 
 	/** Static assert only allow float, int32 or uint32 as a ValueForm */
@@ -109,7 +149,7 @@ public:
 		"TBinaryTree::ValueFrom expect Float, int32 or uint32 to be passed in.");
 
 private:
-	/** Will destroy anything that's below it as well */
+	/** Will destroy anything that's below it as well. Recursive deletion */
 	void DestroyTree(TBinaryTreeNode * Leaf) 
 	{
 		// If node have any Left or right node it will delete them as well
@@ -117,12 +157,14 @@ private:
 		{
 			DestroyTree(Leaf->LeftNode);
 			DestroyTree(Leaf->RightNode);
+
 			delete Leaf;
+			Leaf = nullptr; // Remove Dangling Pointer even though it's not needed
 		}
 	}
 
 	/** Try insert Node according to the Current Node */
-	void InsertNode(ElementType & Elem, ValueForm Val, TBinaryTreeNode * Leaf)
+	TBinaryTreeNode * InsertNode(ElementType & Elem, ValueForm Val, TBinaryTreeNode * Leaf)
 	{
 		// If Val is lesser then The Current Node Val go left
 		if (Val < Leaf->Value)
@@ -130,13 +172,13 @@ private:
 			// If Current Node left node is not Nullptr rerun this function until it is null on either side.
 			if (Leaf->LeftNode != nullptr) 
 			{
-				InsertNode(Elem, Val, Leaf->LeftNode);
-				return;
+				return InsertNode(Elem, Val, Leaf->LeftNode);
 			}
 			// else just add into the current Node left node
 			else 
 			{
-				Leaf->LeftNode = new TBinaryTreeNode(Elem, Val);
+				Leaf->LeftNode = new TBinaryTreeNode(Elem, Val); 
+				return Leaf->LeftNode;
 			}
 		}
 		// if it's Bigger then current Node go right
@@ -145,15 +187,18 @@ private:
 			// Check if Right is empty if it is not Continue Inserting using this function
 			if (Leaf->RightNode != nullptr) 
 			{
-				InsertNode(Elem, Val, Leaf->RightNode);
-				return;
+				return InsertNode(Elem, Val, Leaf->RightNode);
 			}
 			// else just add into the current Node right node
 			else 
 			{
 				Leaf->RightNode = new TBinaryTreeNode(Elem, Val);
+				return Leaf->RightNode;
 			}
 		}
+
+		// Something is wrong
+		return nullptr;
 	}
 
 	TBinaryTreeNode * SearchNode(ValueForm Val, TBinaryTreeNode* Leaf)
@@ -174,6 +219,34 @@ private:
 		}
 
 		return nullptr;
+	}
+
+	/** Getting the minimum Val from Branch Assuming that Left is always lesser then right */
+	TBinaryTreeNode * GetMinValNode(TBinaryTreeNode * NodeToSearchFrom)
+	{
+		TBinaryTreeNode * MinimumNode = NodeToSearchFrom;
+
+		// Keep Going left until u can't go left anymore
+		while (NodeToSearchFrom->LeftNode != nullptr)
+		{
+			MinimumNode = NodeToSearchFrom->LeftNode;
+		}
+	
+		return MinimumNode;
+	}
+
+	/** Getting the maximum Val From branch Assuming that Right is always More then left*/
+	TBinaryTreeNode * GetMaxValNode(TBinaryTreeNode * NodeToSearchFrom)
+	{
+		TBinaryTreeNode * MaximumNode = NodeToSearchFrom;
+
+		// Keep Going left until u can't go Right anymore
+		while (NodeToSearchFrom->RightNode != nullptr)
+		{
+			MaximumNode = NodeToSearchFrom->RightNode;
+		}
+	
+		return MaximumNode;
 	}
 
 	TBinaryTreeNode * RootNode;
